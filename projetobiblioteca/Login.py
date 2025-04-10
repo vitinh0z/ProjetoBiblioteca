@@ -1,16 +1,20 @@
+import sqlite3
+from cadastro import hash_senha
 
+def fazer_login():
+    email = input("Digite seu Email: ")
+    senha = input("Digite sua Senha: ")
+    senha_hash = hash_senha(senha)
 
+    conn = sqlite3.connect("biblioteca.db")
+    cursor = conn.cursor()
 
-while True:
-    usuario = input("Digite Nome do Usuario: ")
-    senha = input("Digite Senha: ")
+    cursor.execute("SELECT * FROM usuarios WHERE email = ? AND senha = ?", (email, senha_hash))
+    resultado = cursor.fetchone()
 
-    if usuario == cadastroUsuario and senha == cadastroSenha:
-        print("Login bem-sucedido!\n")
-        print(f"Bem vindo {usuario}")
-        break 
+    conn.close()
 
+    if resultado:
+        return True  
     else:
-        print("Login ou senha incorretos. Tente novamente.\n")
-
-        
+        return False

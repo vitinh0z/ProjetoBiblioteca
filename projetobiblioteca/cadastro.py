@@ -1,12 +1,12 @@
 import sqlite3
 import hashlib
 
-# Função para criptografar senha
 def hash_senha(senha):
+    """Função para criptografar a senha"""
     return hashlib.sha256(senha.encode()).hexdigest()
 
-# Função de cadastro com retorno dos dados
 def cadastro():
+    """Função de cadastro do usuário"""
     usuario = input("Digite nome de Usuario: ")
 
     while True:
@@ -17,7 +17,7 @@ def cadastro():
         else:
             break
 
-    while True:  
+    while True:
         senha = input("Digite uma senha: ")
         senhaVerificacao = input("Digite a senha Novamente: ")
         if senha != senhaVerificacao:
@@ -26,11 +26,10 @@ def cadastro():
             break
 
     senha_hash = hash_senha(senha)
-    
     return {"usuario": usuario, "email": email, "senha": senha_hash}
 
-# Função para salvar no banco
 def salvar_no_banco(usuario, email, senha):
+    """Função para salvar o cadastro no banco de dados"""
     conn = sqlite3.connect("biblioteca.db")
     cursor = conn.cursor()
 
@@ -49,4 +48,8 @@ def salvar_no_banco(usuario, email, senha):
     conn.commit()
     conn.close()
 
-# Execução
+
+if __name__ == "__main__":
+    dados = cadastro()
+    salvar_no_banco(dados['usuario'], dados['email'], dados['senha'])
+    print("Usuário cadastrado com sucesso!")
